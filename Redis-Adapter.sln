@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Casbin.Adapter.Redis", "Casbin.Adapter.Redis\Casbin.Adapter.Redis.csproj", "{26B6A0B7-7D0A-47D5-8562-C7D4690F2609}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Casbin.Adapter.Redis.UnitTest", "Casbin.Adapter.Redis.UnitTest\Casbin.Adapter.Redis.UnitTest.csproj", "{9241E981-DDBF-444E-836A-3EE6C2DB59DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Casbin.Adapter.Redis.Benchmark", "Casbin.Adapter.Redis.Benchmark\Casbin.Adapter.Redis.Benchmark.csproj", "{D4B73EFF-C6F4-483F-AD3D-9C9DCFDA7D38}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{26B6A0B7-7D0A-47D5-8562-C7D4690F2609}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26B6A0B7-7D0A-47D5-8562-C7D4690F2609}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26B6A0B7-7D0A-47D5-8562-C7D4690F2609}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26B6A0B7-7D0A-47D5-8562-C7D4690F2609}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9241E981-DDBF-444E-836A-3EE6C2DB59DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9241E981-DDBF-444E-836A-3EE6C2DB59DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9241E981-DDBF-444E-836A-3EE6C2DB59DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9241E981-DDBF-444E-836A-3EE6C2DB59DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4B73EFF-C6F4-483F-AD3D-9C9DCFDA7D38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4B73EFF-C6F4-483F-AD3D-9C9DCFDA7D38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4B73EFF-C6F4-483F-AD3D-9C9DCFDA7D38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4B73EFF-C6F4-483F-AD3D-9C9DCFDA7D38}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
