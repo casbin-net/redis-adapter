@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;netcoreapp3.1;net5.0;net6.0;net7.0</TargetFrameworks>
+    <AssemblyName>Casbin.Adapter.Redis</AssemblyName>
+    <LangVersion>9.0</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Casbin.NET.Adapter.Redis</PackageId>
+    <PackageIcon>casbin.png</PackageIcon>
+    <Authors>Casbin.NET</Authors>
+    <RepositoryType>GIT</RepositoryType>
+    <RepositoryUrl>https://github.com/casbin-net/redis-adapter</RepositoryUrl>
+    <Copyright>Apache License 2.0</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/casbin-net/redis-adapter</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Casbin.NET" Version="2.0.0-preview.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StackExchange.Redis" Version="2.6.48" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="casbin.png" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+</Project>
