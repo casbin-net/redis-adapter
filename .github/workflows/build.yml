@@ -52,6 +52,7 @@ jobs:
 
     - name: Upload coverage
       if: github.repository_owner == 'casbin-net' && github.event_name == 'push'
+      shell: pwsh
       run: |
         dotnet tool install coveralls.net --version 3.0.0 --tool-path tools;
         $CommitAuthor = git show -s --pretty=format:"%cn";
