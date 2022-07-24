@@ -129,6 +129,7 @@ jobs:
       run: dotnet build -c Release --no-restore
 
     - name: Pack packages
+      shell: pwsh
       run: |
         $LastTag = git describe --tags (git rev-list --tags --max-count=1);
         echo "Last tag is: $LastTag";
@@ -149,4 +150,4 @@ jobs:
       run: dotnet nuget add source https://www.myget.org/F/casbin-net/api/v2/package --name myget.org
 
     - name: Push develop packages to myget.org
-      run: dotnet nuget push .\packages\*.nupkg -s myget.org -k $env:MYGET_API_TOKEN --skip-duplicate
+      run: dotnet nuget push ./packages/*.nupkg -s myget.org -k $env:MYGET_API_TOKEN --skip-duplicate
