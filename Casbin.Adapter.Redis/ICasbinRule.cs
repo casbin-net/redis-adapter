@@ -2,11 +2,6 @@ using System;
 
 namespace Casbin.Adapter.Redis
 {
-    // public interface ICasbinRule<TKey> : ICasbinRule where TKey : IEquatable<TKey>
-    // {
-    //     public TKey Id { get; set; }
-    // }
-
     public interface ICasbinRule
     {
         public string PType { get; set; }
