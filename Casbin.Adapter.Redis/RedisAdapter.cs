@@ -73,6 +73,23 @@ namespace Casbin.Adapter.Redis
         {
             return casbinRules;
         }
+        
+        protected virtual void OnUpdatePolicy(string section, string policyType, IEnumerable<string> oldRule, 
+            IEnumerable<string> newRule, TCasbinRule oldCasbinRule, TCasbinRule newCasbinRule,
+            out TCasbinRule outOldCasbinRule, out TCasbinRule outNewCasbinRule)
+        {
+            outOldCasbinRule = oldCasbinRule;
+            outNewCasbinRule = newCasbinRule;
+        }
+        
+        protected virtual void OnUpdatePolicies(string section, string policyType, 
+            IEnumerable<IEnumerable<string>> oldRules, IEnumerable<IEnumerable<string>> newRules, 
+            IEnumerable<TCasbinRule> oldCasbinRules, IEnumerable<TCasbinRule> newCasbinRules,
+            out IList<TCasbinRule> outOldCasbinRules, out IList<TCasbinRule> outNewCasbinRules)
+        {
+            outOldCasbinRules = oldCasbinRules as List<TCasbinRule> ?? oldCasbinRules.ToList();
+            outNewCasbinRules = newCasbinRules as List<TCasbinRule> ?? newCasbinRules.ToList();
+        }
 
         protected virtual IEnumerable<TCasbinRule> OnRemoveFilteredPolicy(string section, string policyType, 
             int fieldIndex, string[] fieldValues, IEnumerable<TCasbinRule> casbinRules)
@@ -218,6 +235,134 @@ namespace Casbin.Adapter.Redis
         
         #endregion
         
+        #region Update policy
+        
+        public virtual void UpdatePolicy(string section, string policyType, IEnumerable<string> oldRule, 
+            IEnumerable<string> newRule)
+        {
+            if (oldRule is null || newRule is null)
+            {
+                return;
+            }
+
+            var oldCasbinRule = CasbinRuleExtenstion.Parse<TCasbinRule>(policyType, oldRule);
+            var newCasbinRule = CasbinRuleExtenstion.Parse<TCasbinRule>(policyType, newRule);
+            TCasbinRule outOldCasbinRule, outNewCasbinRule;
+            OnUpdatePolicy(section, policyType, oldRule, newRule, oldCasbinRule, newCasbinRule, 
+                out outOldCasbinRule, out outNewCasbinRule);
+            var index = Database.ListPosition(Key, JsonConvert.SerializeObject(outOldCasbinRule));
+            if (index is -1)
+            {
+                return;
+            }
+            Database.ListSetByIndex(Key, index, JsonConvert.SerializeObject(outNewCasbinRule));
+        }
+        
+        public virtual async Task UpdatePolicyAsync(string section, string policyType, IEnumerable<string> oldRule, 
+            IEnumerable<string> newRule)
+        {
+            if (oldRule is null || newRule is null)
+            {
+                return;
+            }
+            
+            var oldCasbinRule = CasbinRuleExtenstion.Parse<TCasbinRule>(policyType, oldRule);
+            var newCasbinRule = CasbinRuleExtenstion.Parse<TCasbinRule>(policyType, newRule);
+            TCasbinRule outOldCasbinRule, outNewCasbinRule;
+            OnUpdatePolicy(section, policyType, oldRule, newRule, oldCasbinRule, newCasbinRule, 
+                out outOldCasbinRule, out outNewCasbinRule);
+            long index = await Database.ListPositionAsync(Key, JsonConvert.SerializeObject(outOldCasbinRule));
+            if (index is -1)
+            {
+                return;
+            }
+            await Database.ListSetByIndexAsync(Key, index, JsonConvert.SerializeObject(outNewCasbinRule));
+        }
+        
+        public virtual void UpdatePolicies(string section, string policyType, 
+            IEnumerable<IEnumerable<string>> oldRules, IEnumerable<IEnumerable<string>> newRules)
+        {
+            if (oldRules is null || newRules is null || oldRules.Count() != newRules.Count())
+            {
+                return;
+            }
+
+            var oldRulesArray = oldRules as IList<string>[] ?? oldRules.ToArray();
+            if (oldRulesArray.Length is 0)
+            {
+                return;
+            }
+            var newRulesArray = newRules as IList<string>[] ?? newRules.ToArray();
+            if (newRulesArray.Length is 0)
+            {
+                return;
+            }
+
+            var oldCasbinRules = oldRulesArray.Select(r => 
+                CasbinRuleExtenstion.Parse<TCasbinRule>(policyType, r.ToList()));
+            var newCasbinRules = newRulesArray.Select(r => 
+                CasbinRuleExtenstion.Parse<TCasbinRule>(policyType, r.ToList()));
+            IList<TCasbinRule> outOldCasbinRules, outNewCasbinRules;
+            OnUpdatePolicies(section, policyType, oldRulesArray, newRulesArray,
+                oldCasbinRules, newCasbinRules, out outOldCasbinRules, out outNewCasbinRules);
+            if (outOldCasbinRules.Count != outNewCasbinRules.Count)
+            {
+                return;
+            }
+            
+            for (int i = 0; i < outOldCasbinRules.Count; i++)
+            {
+                long index = Database.ListPosition(Key, JsonConvert.SerializeObject(outOldCasbinRules[i]));
+                if (index != -1)
+                {
+                    Database.ListSetByIndex(Key, index, JsonConvert.SerializeObject(outNewCasbinRules[i]));
+                }
+            }
+        }
+        
+        public virtual async Task UpdatePoliciesAsync(string section, string policyType, 
+            IEnumerable<IEnumerable<string>> oldRules, IEnumerable<IEnumerable<string>> newRules)
+        {
+            if (oldRules is null || newRules is null || oldRules.Count() != newRules.Count())
+            {
+                return;
+            }
+
+            var oldRulesArray = oldRules as IList<string>[] ?? oldRules.ToArray();
+            if (oldRulesArray.Length is 0)
+            {
+                return;
+            }
+            var newRulesArray = newRules as IList<string>[] ?? newRules.ToArray();
+            if (newRulesArray.Length is 0)
+            {
+                return;
+            }
+
+            var oldCasbinRules = oldRulesArray.Select(r => 
+                CasbinRuleExtenstion.Parse<TCasbinRule>(policyType, r.ToList()));
+            var newCasbinRules = newRulesArray.Select(r => 
+                CasbinRuleExtenstion.Parse<TCasbinRule>(policyType, r.ToList()));
+            IList<TCasbinRule> outOldCasbinRules, outNewCasbinRules;
+            OnUpdatePolicies(section, policyType, oldRulesArray, newRulesArray,
+                oldCasbinRules, newCasbinRules, out outOldCasbinRules, out outNewCasbinRules);
+            if (outOldCasbinRules.Count != outNewCasbinRules.Count)
+            {
+                return;
+            }
+            
+            for (int i = 0; i < outOldCasbinRules.Count; i++)
+            {
+                long index = await Database.ListPositionAsync(Key, JsonConvert.SerializeObject(outOldCasbinRules[i]));
+                if (index != -1)
+                {
+                    await Database.ListSetByIndexAsync(Key, index, JsonConvert.SerializeObject(outNewCasbinRules[i]));
+                }
+            }
+        }
+        
+        #endregion
+
         #region Remove policy
 
         public virtual void RemovePolicy(string section, string policyType, IEnumerable<string> rule)
